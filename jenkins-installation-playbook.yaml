@@ -1,0 +1,55 @@
+---
+- name: Install Jenkins on AWS EC2
+  hosts: jenkins_server
+  become: true
+  vars:
+    ansible_user: ec2-user
+    ansible_ssh_private_key_file: ~/.ssh/jenkins_access.pem
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+    
+  tasks:
+    - name: yum update
+      ansible.builtin.yum:
+        name: '*'
+        state: latest
+    
+    - name: Download jenkins.repo
+      get_url:
+        url: http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo
+        dest: /etc/yum.repos.d/jenkins.repo
+    
+    - name: Import jenkins key from url
+      ansible.builtin.rpm_key:
+        key: https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+        state: present
+    
+    - name: Install java
+      shell: "amazon-linux-extras install java-openjdk11"
+      
+    # - name: Install java
+    #   ansible.builtin.yum:
+    #     name:  java-11-openjdk-devel
+    #     state: present
+
+    - name: Install Jenkins
+      ansible.builtin.yum:
+        name: jenkins
+        state: latest
+ 
+    - name: Start & Enable Jenkins
+      ansible.builtin.service:
+        name: jenkins
+        state: started
+        enabled: true
+ 
+    - name: Sleep for 20 seconds and continue with play
+      wait_for: timeout=20
+ 
+    - name: Get initial Admin Password
+      shell: cat /var/lib/jenkins/secrets/initialAdminPassword
+      changed_when: false
+      register: result
+ 
+    - name: Print initial Admin Password
+      debug:
+        var: result.stdout
