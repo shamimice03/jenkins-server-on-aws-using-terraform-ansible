@@ -1,5 +1,14 @@
 ## Install Jenkins on AWS using Terraform and Ansible.
 
-`Terraform` - To provision EC2 instance on AWS
+`Terraform` - To provision EC2 instance on AWS. (Codes are under the ``./infra_using_terraform` directory)
 
-`Ansible` - To Install Jenkins on EC2 instance provisioned using terraform
+`Ansible` - To Install Jenkins on the EC2 instance provisioned using terraform
+
+ To Run `ansible` playbook use the following command:
+ 
+ `
+ ansible-playbook jenkins-installation-playbook.yaml
+ `
+ 
+
+
