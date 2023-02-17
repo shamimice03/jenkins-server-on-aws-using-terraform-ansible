@@ -1,12 +1,11 @@
 ### Use the `terraform.tfvars` file to set variables as per your needs
 
 ```
-project_name            = "Ansible-Dynamic-Inventory"
+project_name            = "spin-up-jenkins-server"
 instance_type           = "t2.micro"
-key_name                = "aws-ec2-access"
-amazon_linux_host_count = 2
-ubuntu_host_count       = 2
-private_key_location    = "/home/ec2-user/.ssh/aws-ec2-access.pem"
+key_name                = "jenkins_access"
+amazon_linux_host_count = 1
+private_key_location    = "/home/ec2-user/.ssh/jenkins_access.pem"
 sg_ports = [
   {
     "port" : 22,
@@ -22,6 +21,10 @@ sg_ports = [
   },
   {
     "port" : 80,
+    "protocol" : "tcp"
+  },
+  {
+    "port" : 8080,
     "protocol" : "tcp"
   }
 ]
